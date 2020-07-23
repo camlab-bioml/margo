@@ -1,0 +1,20 @@
+Her2:
+  - Her2
+  - ERBB2
+  - CD340
+  - MLN19
+  - NEU
+  - NGL
+  - TKR1
+
+EGFR:
+  - EGFR
+  - ERBB
+  - Her1
+
+
+CD45:
+  - CD45
+  - PTPRC
+  - CD45
+
