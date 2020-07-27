@@ -1,0 +1,53 @@
+cell_type:
+  Amniotic fluid stem cell/Osteocyte/Muller glia precursor cell/Myometrial stem
+  cell/Side-population cell/Cancer stem-like cell/Prostate stem cell/Serous acinar
+  cell:
+     - CD44
+  B cell:
+  - CD20
+  Basal cell:
+  - Cytokeratin 5
+  Cancer cell:
+  - CD20
+  - CD44
+  Cancer stem cell:
+  - CD20
+  - c-Myc
+  - CD44
+  Epithelial cell:
+  - E-Cadherin
+  - CD31
+  Hematopoietic cell/Endothelial cell:
+  - CD31
+  - CD45
+  Kupffer cell/Macrophage/Microglial cell/Dendritic cell/M1 macrophage:
+  - CD68
+  ? Leukocyte/Mesenchymal stromal cell/Cortical thymus epithelial cell/Hepatoblast/Medullary
+    thymus epithelial cell/White blood cell/Mesenchymal cell
+  : - CD45
+  Mesenchymal stem cell/Adipose-derived stem cell:
+  - CD31
+  - CD44
+  Monocyte:
+  - CD31
+  - CD68
+  ? Natural killer cell/Memory T cell/Infiltrated mononuclear cell/Cytotoxic T cell/T
+    helper2 (Th2) cell/T helper1 (Th1) cell/Natural killer T (NKT) cell/T helper17
+    (Th17) cell/Naive T cell/CD8+ cytotoxic T cell/CD4+ T helper cell/CD4+ T cell/CD8+
+    T cell/T helper cell/Cytokine induced killer cell/Immune cell/T helper9 (Th9)
+    cell/Angiogenic T cell
+  : - CD3
+  ? Periodontal ligament stem cell/Endothelial progenitor cell/Platelet/Hematopoietic
+    stem cell/Preadipocyte/Immature endothelial cell/Mesodermal embryonic stem cell/Mature
+    endothelial cell/Lymphatic endothelial cell/Megakaryocyte/Adventitial cell/Thymic
+    emigrant cell/Endothelial precursor cell/Adipose-derived stromal cell
+  : - CD31
+  Sertoli cell/Stromal cell/Basal epithelial cell:
+  - Vimentin
+  Stem cell:
+  - CD20
+  - CD31
+  - CD44
+  T cell:
+  - CD3
+  - CD45

@@ -1,20 +1,66 @@
 Her2:
   - Her2
+  - HER2
   - ERBB2
-  - CD340
-  - MLN19
-  - NEU
-  - NGL
-  - TKR1
 
 EGFR:
   - EGFR
   - ERBB
   - Her1
 
-
 CD45:
   - CD45
   - PTPRC
-  - CD45
+
+Ki-67:
+  - Ki-67
+  - Ki67
+
+Cytokeratin-19:
+  - Cytokeratin-19
+  - Cytokeratin 19
+  - Keratin-19
+
+Cytokeratin-14:
+  - Cytokeratin-14
+  - Cytokeratin 14
+  - Keratin 14
+  - KRT14
+  - CK14
+
+
+Cytokeratin-5:
+  - Cytokeratin-5
+  - Cytokeratin 5
+  - KRT5
+  - CK5
+  - K5
+
+CD68:
+  - CD68
+  - GP110
+
+Cytokeratin-8/18:
+  - Cytokeratin-8/18
+  - Cytokeratin 8
+  - Cytokeratin-8
+  - Keratin-8
+  - KRT8
+  - CK8
+  - Cytokeratin 18
+  - Cytokeratin-18
+  - Keratin-18
+  - KRT18
+  - CK18
+
+  Cytokeratin-7:
+    - Cytokeratin-7
+    - Cytokeratin 7
+    - KRT7
+    - CK7
+
+  
+
+
+
 
