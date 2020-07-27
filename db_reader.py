@@ -2,9 +2,6 @@ import pandas as pd
 import yaml
 
 
-def recog_feature_names(alias_marker: str, features: list):
-
-
 def lookup(row, features):
     # nicknames = row["nicknames"].values[0]
     # if isinstance(nicknames, str) and nicknames != "nan":
@@ -96,7 +93,6 @@ if __name__ == "__main__":
     exp_df = pd.read_csv(exp_csv, index_col=0)
     features = exp_df.columns
 
-    features = recog_feature_names(alias_marker, features)
     # features = ["CD45", "CD3", "CD8"]
     marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
     # cd45 = [ct for ct in marker_mat.columns if marker_mat[ct]["CD45"] == 1]
