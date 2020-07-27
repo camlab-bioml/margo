@@ -2,15 +2,15 @@ import pandas as pd
 import yaml
 
 
-def lookup(row, features):
+def lookup(row, features, alias_dict):
     # nicknames = row["nicknames"].values[0]
     # if isinstance(nicknames, str) and nicknames != "nan":
     #     alias = nicknames.split("|")
     # else:
     #     alias = []
     # alias.append(row["official gene symbol"].values[0])
-    nicknames = row["Cell Marker"].values[0]
-    mk = nicknames.split(",")
+    mks = row["Cell Marker"].values[0]
+    mks = mks.split(",")
 
     # for f in features:
     #     if f in alias:
@@ -18,8 +18,14 @@ def lookup(row, features):
     # return None
     mk_df = pd.DataFrame()
     for f in features:
-        if f in mk:
-            mk_df = pd.concat([mk_df, pd.DataFrame([[f, row["Cell Type"].values[0]]])])
+        if (alias_dict is None) or (f not in alias_dict):
+            if f in mks:
+                mk_df = pd.concat([mk_df, pd.DataFrame([[f, row["Cell Type"].values[0]]])])
+        else:
+            alias = alias_dict[f]
+            for m in mks:
+                if m in alias:
+                    mk_df = pd.concat([mk_df, pd.DataFrame([[f, row["Cell Type"].values[0]]])])
     return mk_df
 
 
@@ -45,7 +51,12 @@ def collapse_celltype(marker_mat: pd.DataFrame) -> pd.DataFrame:
 #     return marker_mat
 
 
-def construct_marker_mat_from_db(features: list, database: list) -> pd.DataFrame:
+def construct_marker_mat_from_db(features: list, database: list, alias_marker = None) -> pd.DataFrame:
+    alias_dict = None
+    if alias_marker is not None:
+        with open(alias_marker, "r") as stream:
+            alias_dict = yaml.safe_load(stream)
+
     marker = pd.DataFrame()
     for db in database:
         # marker_db = pd.read_csv(db, sep="\t")
@@ -53,7 +64,7 @@ def construct_marker_mat_from_db(features: list, database: list) -> pd.DataFrame
         marker_df = pd.read_csv(db)
 
         for r in range(marker_df.shape[0] - 1):
-            new_row = lookup(marker_df[r:r+1], features)
+            new_row = lookup(marker_df[r:r+1], features, alias_dict)
             # if new_row is not None:
             #     marker = pd.concat([marker, new_row])
             marker = pd.concat([marker, new_row])
@@ -94,7 +105,8 @@ if __name__ == "__main__":
     features = exp_df.columns
 
     # features = ["CD45", "CD3", "CD8"]
-    marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
+    marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker, alias_marker=alias_marker)
+    # marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
     # cd45 = [ct for ct in marker_mat.columns if marker_mat[ct]["CD45"] == 1]
     # print(cd45)
     print(marker_mat)

@@ -16,12 +16,12 @@ Ki-67:
   - Ki-67
   - Ki67
 
-Cytokeratin-19:
+Cytokeratin 19:
   - Cytokeratin-19
   - Cytokeratin 19
   - Keratin-19
 
-Cytokeratin-14:
+Cytokeratin 14:
   - Cytokeratin-14
   - Cytokeratin 14
   - Keratin 14
@@ -29,7 +29,7 @@ Cytokeratin-14:
   - CK14
 
 
-Cytokeratin-5:
+Cytokeratin 5:
   - Cytokeratin-5
   - Cytokeratin 5
   - KRT5
@@ -40,7 +40,7 @@ CD68:
   - CD68
   - GP110
 
-Cytokeratin-8/18:
+Cytokeratin 8/18:
   - Cytokeratin-8/18
   - Cytokeratin 8
   - Cytokeratin-8
@@ -53,11 +53,11 @@ Cytokeratin-8/18:
   - KRT18
   - CK18
 
-  Cytokeratin-7:
-    - Cytokeratin-7
-    - Cytokeratin 7
-    - KRT7
-    - CK7
+Cytokeratin 7:
+  - Cytokeratin-7
+  - Cytokeratin 7
+  - KRT7
+  - CK7
 
   
 
