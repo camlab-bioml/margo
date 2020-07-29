@@ -1,7 +1,39 @@
-import argparse
+import argparse, os
+import pandas as pd
 import astir_marker_generator as amg
 
 
+parser = argparse.ArgumentParser(description='Generate astir marker')
+parser.add_argument("expr_csv", help="Path to CSV expression matrix which is to be used for astir classification.")
+parser.add_argument("marker_yaml", help="Path to output marker yaml file.")
+parser.add_argument("--tissue", "-t", 
+                    type=str,
+                    default="",
+                    help="Tissue specified to be searched within.")
+args = parser.parse_args()
 
 
-print("Done!")
+if __name__ == "__main__":
+    cur_path = os.path.dirname(os.path.realpath(__file__))
+    cell_marker = [f"{cur_path}/../astir_marker_generator/marker_database/CellMarker-company.csv", 
+        f"{cur_path}/../astir_marker_generator/marker_database/CellMarker-experiment.csv", 
+        f"{cur_path}/../astir_marker_generator/marker_database/CellMarker-review.csv", 
+        f"{cur_path}/../astir_marker_generator/marker_database/CellMarker-scs.csv"]
+    alias_marker = f"{cur_path}/../astir_marker_generator/marker_database/alias.yml"
+
+    exp_df = pd.read_csv(args.expr_csv, index_col=0)
+    features = exp_df.columns
+
+    tissue = args.tissue
+    if tissue == "":
+        tissue = None
+
+    marker_mat = amg.construct_marker_mat_from_db(features=features, 
+        database=cell_marker, 
+        alias_marker=alias_marker,
+        tissue=tissue)
+    amg.to_yaml(marker_mat, args.marker_yaml)
+
+    print("Done!")
+
+# astir-marker ../BaselTMA_SP43_115_X4Y8.csv ./marker_yaml/test_marker.yml -t Breast

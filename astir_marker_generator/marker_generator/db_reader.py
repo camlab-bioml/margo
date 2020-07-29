@@ -108,29 +108,25 @@ def to_yaml(marker_mat: pd.DataFrame, name: str) -> None:
         yaml.dump(marker, yam, width=2000, default_flow_style=False)
     
 
-if __name__ == "__main__":
-    exp_csv = "../BaselTMA_SP43_115_X4Y8.csv"
-    panglao_db = ["./marker_database/PanglaoDB_markers.tsv"]
-    cell_marker = ["./marker_database/CellMarker-company.csv", 
-        "./marker_database/CellMarker-experiment.csv", 
-        "./marker_database/CellMarker-review.csv", 
-        "./marker_database/CellMarker-scs.csv"]
-    brest_marker = ["./marker_database/brest-1.csv", 
-        "./marker_database/brest-2.csv", 
-        "./marker_database/brest-3.csv"]
-    alias_marker = "./marker_database/alias.yml"
-    tissue = "Blood"
-    exp_df = pd.read_csv(exp_csv, index_col=0)
-    features = exp_df.columns
+# if __name__ == "__main__":
+#     exp_csv = "../BaselTMA_SP43_115_X4Y8.csv"
+#     cell_marker = ["./marker_database/CellMarker-company.csv", 
+#         "./marker_database/CellMarker-experiment.csv", 
+#         "./marker_database/CellMarker-review.csv", 
+#         "./marker_database/CellMarker-scs.csv"]
+#     alias_marker = "./marker_database/alias.yml"
+#     tissue = "Blood"
+#     exp_df = pd.read_csv(exp_csv, index_col=0)
+#     features = exp_df.columns
 
-    # features = ["CD45", "CD3", "CD8"]
-    marker_mat = construct_marker_mat_from_db(features=features, 
-        database=cell_marker, 
-        alias_marker=alias_marker,
-        tissue=tissue)
-    # marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
-    # cd45 = [ct for ct in marker_mat.columns if marker_mat[ct]["CD45"] == 1]
-    # print(cd45)
-    # print(marker_mat)
-    to_yaml(marker_mat, "./marker_yaml/celltype_marker_2.yml")
+#     # features = ["CD45", "CD3", "CD8"]
+#     marker_mat = construct_marker_mat_from_db(features=features, 
+#         database=cell_marker, 
+#         alias_marker=alias_marker,
+#         tissue=tissue)
+#     # marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
+#     # cd45 = [ct for ct in marker_mat.columns if marker_mat[ct]["CD45"] == 1]
+#     # print(cd45)
+#     # print(marker_mat)
+#     to_yaml(marker_mat, "./marker_yaml/celltype_marker_2.yml")
 

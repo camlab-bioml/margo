@@ -22,7 +22,9 @@ setuptools.setup(
     license="GPLv3",
     install_requires=[
         "pandas",
-        "pyyaml"
+        "pyyaml",
+        "argparse",
+        "os"
     ],
     include_package_data=True,
     scripts=["bin/astir-marker"],
