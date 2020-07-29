@@ -11,6 +11,7 @@ def lookup(row, features, alias_dict):
     # alias.append(row["official gene symbol"].values[0])
     mks = row["Cell Marker"].values[0]
     mks = mks.split(",")
+    mks = [m.strip() for m in mks]
 
     # for f in features:
     #     if f in alias:
@@ -39,7 +40,8 @@ def collapse_celltype(marker_mat: pd.DataFrame) -> pd.DataFrame:
                 marker_mat = marker_mat.rename(columns={type1: f"{type1}/{type2}", 
                     type2: "NA"})
                 type1 = f"{type1}/{type2}"
-    marker_mat = marker_mat.drop("NA", axis=1)
+    if "NA" in marker_mat.columns:
+        marker_mat = marker_mat.drop("NA", axis=1)
     return marker_mat
 
 
@@ -50,8 +52,19 @@ def collapse_celltype(marker_mat: pd.DataFrame) -> pd.DataFrame:
 #             marker_mat = marker_mat.drop(ct, axis=1)
 #     return marker_mat
 
+def drop_single_feature(marker_mat: pd.DataFrame) -> pd.DataFrame:
+    for ct in marker_mat.columns:
+        if marker_mat[ct].sum() <= 1:
+            marker_mat = marker_mat.drop(ct, axis=1)
+    return marker_mat
 
-def construct_marker_mat_from_db(features: list, database: list, alias_marker = None) -> pd.DataFrame:
+
+def construct_marker_mat_from_db(features: list, 
+    database: list, 
+    alias_marker = None, 
+    tissue = None
+) -> pd.DataFrame:
+
     alias_dict = None
     if alias_marker is not None:
         with open(alias_marker, "r") as stream:
@@ -62,6 +75,8 @@ def construct_marker_mat_from_db(features: list, database: list, alias_marker = 
         # marker_db = pd.read_csv(db, sep="\t")
         # marker_db = marker_db[marker_db.species != "Mm"]
         marker_df = pd.read_csv(db)
+        if tissue is not None:
+            marker_df = marker_df[marker_df.Tissue == tissue]
 
         for r in range(marker_df.shape[0] - 1):
             new_row = lookup(marker_df[r:r+1], features, alias_dict)
@@ -77,8 +92,8 @@ def construct_marker_mat_from_db(features: list, database: list, alias_marker = 
     for i in marker.index:
         marker_mat[marker["cell_type"][i]][marker["feature"][i]] = 1
     
-    # marker_mat = drop_zeros(marker_mat)
     marker_mat = collapse_celltype(marker_mat)
+    marker_mat = drop_single_feature(marker_mat)
     return marker_mat
 
 
@@ -90,7 +105,7 @@ def to_yaml(marker_mat: pd.DataFrame, name: str) -> None:
     marker = {"cell_type": type_marker}
     
     with open(name, 'w') as yam:
-        yaml.dump(marker, yam)
+        yaml.dump(marker, yam, width=2000, default_flow_style=False)
     
 
 if __name__ == "__main__":
@@ -100,15 +115,22 @@ if __name__ == "__main__":
         "./marker_database/CellMarker-experiment.csv", 
         "./marker_database/CellMarker-review.csv", 
         "./marker_database/CellMarker-scs.csv"]
+    brest_marker = ["./marker_database/brest-1.csv", 
+        "./marker_database/brest-2.csv", 
+        "./marker_database/brest-3.csv"]
     alias_marker = "./marker_database/alias.yml"
+    tissue = "Blood"
     exp_df = pd.read_csv(exp_csv, index_col=0)
     features = exp_df.columns
 
     # features = ["CD45", "CD3", "CD8"]
-    marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker, alias_marker=alias_marker)
+    marker_mat = construct_marker_mat_from_db(features=features, 
+        database=cell_marker, 
+        alias_marker=alias_marker,
+        tissue=tissue)
     # marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
     # cd45 = [ct for ct in marker_mat.columns if marker_mat[ct]["CD45"] == 1]
     # print(cd45)
-    print(marker_mat)
-    to_yaml(marker_mat, "./marker_yaml/celltype_marker.yml")
+    # print(marker_mat)
+    to_yaml(marker_mat, "./marker_yaml/celltype_marker_2.yml")
 
