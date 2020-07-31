@@ -10,6 +10,10 @@ parser.add_argument("--tissue", "-t",
                     type=str,
                     default="",
                     help="Tissue specified to be searched within.")
+parser.add_argument("--min_marker_per_celltype", "-m", 
+                    type=int,
+                    default=1,
+                    help="Minimum marker per cell type needed to have to be included.")
 args = parser.parse_args()
 
 
@@ -29,9 +33,10 @@ if __name__ == "__main__":
     marker_mat = amg.construct_marker_mat_from_db(features=features, 
         database=cell_marker, 
         alias_marker=alias_marker,
-        tissue=tissue)
+        tissue=tissue,
+        min_marker=args.min_marker_per_celltype)
     amg.to_yaml(marker_mat, args.marker_yaml)
 
     print(f"Corresponding marker file generated as {args.marker_yaml}.")
 
-# mentor ../BaselTMA_SP43_115_X4Y8.csv ./marker_output/test_marker.yml -t Breast
+# mentor ../BaselTMA_SP43_115_X4Y8.csv ./marker_output/test_marker.yml -t Breast -m 3

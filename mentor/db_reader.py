@@ -52,9 +52,9 @@ def collapse_celltype(marker_mat: pd.DataFrame) -> pd.DataFrame:
 #             marker_mat = marker_mat.drop(ct, axis=1)
 #     return marker_mat
 
-def drop_single_feature(marker_mat: pd.DataFrame) -> pd.DataFrame:
+def drop_n_marker(marker_mat: pd.DataFrame, n_marker) -> pd.DataFrame:
     for ct in marker_mat.columns:
-        if marker_mat[ct].sum() <= 1:
+        if marker_mat[ct].sum() <= n_marker:
             marker_mat = marker_mat.drop(ct, axis=1)
     return marker_mat
 
@@ -62,7 +62,8 @@ def drop_single_feature(marker_mat: pd.DataFrame) -> pd.DataFrame:
 def construct_marker_mat_from_db(features: list, 
     database: list, 
     alias_marker = None, 
-    tissue = None
+    tissue = None,
+    min_marker = 1,
 ) -> pd.DataFrame:
 
     alias_dict = None
@@ -93,7 +94,7 @@ def construct_marker_mat_from_db(features: list,
         marker_mat[marker["cell_type"][i]][marker["feature"][i]] = 1
     
     marker_mat = collapse_celltype(marker_mat)
-    marker_mat = drop_single_feature(marker_mat)
+    marker_mat = drop_n_marker(marker_mat, min_marker)
     return marker_mat
 
 
