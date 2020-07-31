@@ -65,6 +65,8 @@ def construct_marker_mat_from_db(features: list,
     tissue = None,
     min_marker = 1,
 ) -> pd.DataFrame:
+    if tissue is not None:
+        tissue = tissue.split(",")
 
     alias_dict = None
     if alias_marker is not None:
@@ -77,7 +79,10 @@ def construct_marker_mat_from_db(features: list,
         # marker_db = marker_db[marker_db.species != "Mm"]
         marker_df = pd.read_csv(db)
         if tissue is not None:
-            marker_df = marker_df[marker_df.Tissue == tissue]
+            temp_df = pd.DataFrame()
+            for t in tissue:
+                temp_df = pd.concat([temp_df, marker_df[marker_df.Tissue == t]])
+            marker_df = temp_df
 
         for r in range(marker_df.shape[0] - 1):
             new_row = lookup(marker_df[r:r+1], features, alias_dict)
@@ -110,24 +115,33 @@ def to_yaml(marker_mat: pd.DataFrame, name: str) -> None:
     
 
 # if __name__ == "__main__":
-#     exp_csv = "../BaselTMA_SP43_115_X4Y8.csv"
-#     cell_marker = ["./marker_database/CellMarker-company.csv", 
-#         "./marker_database/CellMarker-experiment.csv", 
-#         "./marker_database/CellMarker-review.csv", 
-#         "./marker_database/CellMarker-scs.csv"]
-#     alias_marker = "./marker_database/alias.yml"
-#     tissue = "Blood"
-#     exp_df = pd.read_csv(exp_csv, index_col=0)
-#     features = exp_df.columns
+#     # exp_csv = "../BaselTMA_SP43_115_X4Y8.csv"
+#     cell_marker = ["../marker_database/CellMarker-company.csv", 
+#         "../marker_database/CellMarker-experiment.csv", 
+#         "../marker_database/CellMarker-review.csv", 
+#         "../marker_database/CellMarker-scs.csv"]
+#     # alias_marker = "./marker_database/alias.yml"
+# #     tissue = "Blood"
+#     # exp_df = pd.read_csv(exp_csv, index_col=0)
+#     # features = exp_df.columns
 
-#     # features = ["CD45", "CD3", "CD8"]
-#     marker_mat = construct_marker_mat_from_db(features=features, 
-#         database=cell_marker, 
-#         alias_marker=alias_marker,
-#         tissue=tissue)
-#     # marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
-#     # cd45 = [ct for ct in marker_mat.columns if marker_mat[ct]["CD45"] == 1]
-#     # print(cd45)
-#     # print(marker_mat)
-#     to_yaml(marker_mat, "./marker_yaml/celltype_marker_2.yml")
+# #     # features = ["CD45", "CD3", "CD8"]
+#     # marker_mat = construct_marker_mat_from_db(features=features, 
+#     #     database=cell_marker, 
+#     #     alias_marker=alias_marker,
+#     #     tissue=tissue)
+# #     # marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
+# #     # cd45 = [ct for ct in marker_mat.columns if marker_mat[ct]["CD45"] == 1]
+# #     # print(cd45)
+# #     # print(marker_mat)
+# #     to_yaml(marker_mat, "./marker_yaml/celltype_marker_2.yml")
+#     marker = pd.DataFrame()
+#     for db in cell_marker:
+#         # marker_db = pd.read_csv(db, sep="\t")
+#         # marker_db = marker_db[marker_db.species != "Mm"]
+#         marker_df = pd.read_csv(db)
+#         marker = pd.concat([marker, marker_df["Tissue"]])
+#     tissue = list(set(marker[0]))
+#     tissue.sort()
+#     print(tissue)
 
