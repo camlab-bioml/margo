@@ -47,15 +47,6 @@ latex_elements = {
     'figure_align': 'htbp',
 }
 
-# # (for confluence cloud)
-# confluence_publish = True
-# confluence_space_name = 'SPEC'
-# # (for confluence cloud)
-# confluence_server_url = 'https://spectrra.atlassian.net/wiki/'
-# confluence_server_user = 'jinyu.hou@mail.utoronto.ca'
-# confluence_server_pass = 'By2TFr57JoJlxAJnCuRDCAF4'
-# # api token: By2TFr57JoJlxAJnCuRDCAF4
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
