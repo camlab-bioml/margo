@@ -53,6 +53,8 @@ def collapse_celltype(marker_mat: pd.DataFrame) -> pd.DataFrame:
 #     return marker_mat
 
 def drop_n_marker(marker_mat: pd.DataFrame, n_marker) -> pd.DataFrame:
+    if n_marker < 1:
+        raise NotGeneratableError("<min_marker_per_celltype> should be greater or equal to 1.")
     for ct in marker_mat.columns:
         if marker_mat[ct].sum() <= n_marker:
             marker_mat = marker_mat.drop(ct, axis=1)
@@ -89,6 +91,8 @@ def construct_marker_mat_from_db(features: list,
             # if new_row is not None:
             #     marker = pd.concat([marker, new_row])
             marker = pd.concat([marker, new_row])
+    if marker.shape == (0, 0):
+        raise NotGeneratableError("<tissue> does not exist in the tissue list.")
 
     marker.columns = ["feature", "cell_type"]
     marker.index = list(range(marker.shape[0]))
@@ -113,6 +117,9 @@ def to_yaml(marker_mat: pd.DataFrame, name: str) -> None:
     with open(name, 'w') as yam:
         yaml.dump(marker, yam, width=2000, default_flow_style=False)
     
+
+class NotGeneratableError(Exception):
+    pass
 
 # if __name__ == "__main__":
 #     # exp_csv = "../BaselTMA_SP43_115_X4Y8.csv"
@@ -144,4 +151,3 @@ def to_yaml(marker_mat: pd.DataFrame, name: str) -> None:
 #     tissue = list(set(marker[0]))
 #     tissue.sort()
 #     print(tissue)
-

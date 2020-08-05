@@ -49,9 +49,9 @@ args = parser.parse_args()
 
 if __name__ == "__main__":
     cur_path = os.path.dirname(os.path.realpath(__file__))
-    cell_marker = [f"{cur_path}/../marker_database/{f}" for f 
-        in os.listdir(f"{cur_path}/../marker_database") if ".csv" in f]
-    alias_marker = f"{cur_path}/../marker_database/alias.yml"
+    cell_marker = [f"{cur_path}/../mentor/marker_database/{f}" for f 
+        in os.listdir(f"{cur_path}/../mentor/marker_database") if ".csv" in f]
+    alias_marker = f"{cur_path}/../mentor/marker_database/alias.yml"
 
     exp_df = pd.read_csv(args.expr_csv, index_col=0)
     features = exp_df.columns
