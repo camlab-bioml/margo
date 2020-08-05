@@ -18,8 +18,9 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'mentor'
-copyright = '2020, Jinelle Hou'
+copyright = '2020, Campbell Lab'
 author = 'Jinelle Hou'
+version = "0.0.1"
 
 
 # -- General configuration ---------------------------------------------------
