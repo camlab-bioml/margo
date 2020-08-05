@@ -10,9 +10,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information -----------------------------------------------------
@@ -28,7 +28,33 @@ author = 'Jinelle Hou'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.ifconfig',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.githubpages',
+    'sphinxcontrib.confluencebuilder'
 ]
+
+latex_elements = {
+# The paper size ('letterpaper' or 'a4paper').
+    'papersize': 'letterpaper',
+# The font size ('10pt', '11pt' or '12pt').
+    'pointsize': '10pt',
+# Additional stuff for the LaTeX preamble.
+    'preamble': '',
+# Latex figure (float) alignment
+    'figure_align': 'htbp',
+}
+
+# # (for confluence cloud)
+# confluence_publish = True
+# confluence_space_name = 'SPEC'
+# # (for confluence cloud)
+# confluence_server_url = 'https://spectrra.atlassian.net/wiki/'
+# confluence_server_user = 'jinyu.hou@mail.utoronto.ca'
+# confluence_server_pass = 'By2TFr57JoJlxAJnCuRDCAF4'
+# # api token: By2TFr57JoJlxAJnCuRDCAF4
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -44,7 +70,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = "sphinx_rtd_theme"
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = "sphinx"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

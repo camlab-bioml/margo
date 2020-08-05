@@ -3,18 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to mentor's documentation!
-==================================
 
+Documentation for Mentor
+**************************
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+.. Indices and tables
+.. ==================
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
+   
+mentor
+===================
+.. automodule:: mentor
+   :members:
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

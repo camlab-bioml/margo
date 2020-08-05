@@ -23,7 +23,9 @@ setuptools.setup(
     install_requires=[
         "pandas",
         "pyyaml",
-        "argparse"
+        "argparse",
+        "sphinx",
+        "rinohtype"
     ],
     include_package_data=True,
     scripts=["bin/mentor"],
