@@ -11,7 +11,7 @@ pip install mentor
 
 ## Documentation
 
-Check out a full description of the project [here](https://to-be-done).
+Check out a full description of the project [here](https://camlab-bioml.github.io/mentor/).
 
 ## Reference
 
