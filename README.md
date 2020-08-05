@@ -1,18 +1,18 @@
-# $MENTOR (MarkerGenerator)
+# MENTOR (MarkerGenerator)
 ----------------------------
 
 A tool that generates yaml cell type marker which maps cell types to gene expression.    
 
 ## Installation
 
-Install $mentor by running:
+Install mentor by running:
 ```
 pip install mentor
 ```
 
 ## Documentation
 
-Check out a full description of the project [here].
+Check out a full description of the project [here](https://to-be-done).
 
 ## Resource
 
