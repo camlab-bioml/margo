@@ -8,8 +8,8 @@ parser.add_argument("expr_csv", help="Path to CSV expression matrix which is to 
 parser.add_argument("marker_yaml", help="Path to output marker yaml file.")
 parser.add_argument("-m", "--min_marker_per_celltype", 
                     type=int,
-                    default=1,
-                    help="Minimum marker per cell type needed to have to be included.")
+                    default=2,
+                    help="Minimum marker per cell type needed to have to be included, default to 2.")
 parser.add_argument("-t", "--tissue", 
                     type=str,
                     default="",

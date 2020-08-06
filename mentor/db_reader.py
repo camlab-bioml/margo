@@ -56,7 +56,7 @@ def drop_n_marker(marker_mat: pd.DataFrame, n_marker) -> pd.DataFrame:
     if n_marker < 1:
         raise NotGeneratableError("<min_marker_per_celltype> should be greater or equal to 1.")
     for ct in marker_mat.columns:
-        if marker_mat[ct].sum() <= n_marker:
+        if marker_mat[ct].sum() < n_marker:
             marker_mat = marker_mat.drop(ct, axis=1)
     return marker_mat
 
@@ -65,7 +65,7 @@ def construct_marker_mat_from_db(features: list,
     database: list, 
     alias_marker = None, 
     tissue = None,
-    min_marker = 1,
+    min_marker = 2,
 ) -> pd.DataFrame:
     if tissue is not None:
         tissue = tissue.split(",")

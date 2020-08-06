@@ -74,6 +74,8 @@ Usage
    'Venous blood', 'Visceral adipose tissue', 'Vocal fold', 'Whartons jelly', 
    'White adipose tissue'
 
+* ``<min_marker_per_celltype>`` is the minimum number of markers a cell type needed to have in order to be included in the output. For example, if ``-m 3`` is indicated, each cell type in the output marker would have at least 3 expression markers. It is defaulted to 2 if not specified.
+
 
 
 
