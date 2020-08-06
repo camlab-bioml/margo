@@ -12,6 +12,7 @@
 #
 import os
 import sys
+import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -29,24 +30,24 @@ version = "0.0.1"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx_rtd_theme",
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-    'sphinxcontrib.confluencebuilder'
 ]
 
-latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-    'papersize': 'letterpaper',
-# The font size ('10pt', '11pt' or '12pt').
-    'pointsize': '10pt',
-# Additional stuff for the LaTeX preamble.
-    'preamble': '',
-# Latex figure (float) alignment
-    'figure_align': 'htbp',
-}
+# latex_elements = {
+# # The paper size ('letterpaper' or 'a4paper').
+#     'papersize': 'letterpaper',
+# # The font size ('10pt', '11pt' or '12pt').
+#     'pointsize': '10pt',
+# # Additional stuff for the LaTeX preamble.
+#     'preamble': '',
+# # Latex figure (float) alignment
+#     'figure_align': 'htbp',
+# }
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -62,12 +63,12 @@ exclude_patterns = ['pages', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# html_theme = "sphinx_rtd_theme"
-html_theme = "classic"
-html_theme_options = {
-    "rightsidebar": "true",
-    "relbarbgcolor": "black"
-}
+html_theme = "sphinx_rtd_theme"
+# html_theme = "classic"
+# html_theme_options = {
+#     "rightsidebar": "true",
+#     "relbarbgcolor": "black"
+# }
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
 
