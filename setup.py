@@ -25,7 +25,8 @@ setuptools.setup(
         "pyyaml",
         "argparse",
         "sphinx",
-        "rinohtype"
+        "rinohtype",
+        "sphinx-rtd-theme"
     ],
     include_package_data=True,
     scripts=["bin/mentor"],

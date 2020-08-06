@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 
-Documentation for mentor
+Documentation for Mentor
 **************************
 .. toctree::
    :maxdepth: 2
