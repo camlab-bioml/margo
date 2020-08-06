@@ -20,7 +20,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'mentor'
-copyright = '2020, Jinyu Hou'
+copyright = '2020, Campbell Lab'
 author = 'Jinyu Hou'
 
 # The full version, including alpha/beta/rc tags
