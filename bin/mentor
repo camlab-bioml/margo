@@ -65,7 +65,7 @@ if __name__ == "__main__":
         alias_marker=alias_marker,
         tissue=tissue,
         min_marker=args.min_marker_per_celltype)
-    # amg.to_yaml(marker_mat, args.marker_yaml)
+    amg.to_yaml(marker_mat, args.marker_yaml)
 
     print(f"Corresponding marker file generated as {args.marker_yaml}.")
 
