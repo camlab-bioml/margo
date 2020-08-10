@@ -9,8 +9,8 @@ setuptools.setup(
     author="Jinyu Hou",
     author_email="jhou@lunenfeld.ca",
     description=" ",
-    long_description=long_description,
     long_description_content_type="text/markdown",
+    long_description=long_description,
     url="https://github.com/camlab-bioml/margo",
     packages=["margo"],
     classifiers=[
