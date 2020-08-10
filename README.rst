@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 **************************
-Documentation for Margo
+Margo (Marker Generator)
 **************************
 
 Margo is a tool that generates yaml cell type marker which maps cell types to gene expression 
