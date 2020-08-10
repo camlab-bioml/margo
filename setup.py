@@ -24,8 +24,8 @@ setuptools.setup(
         "pandas",
         "pyyaml",
         "argparse",
-        "sphinx",
-        "rinohtype"
+        # "sphinx",
+        # "rinohtype"
     ],
     include_package_data=True,
     scripts=["bin/mentor"],
