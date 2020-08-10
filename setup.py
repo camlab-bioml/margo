@@ -1,16 +1,18 @@
 import setuptools
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setuptools.setup(
     name="margo",
     version="0.0.1",
     author="Jinyu Hou",
     author_email="jhou@lunenfeld.ca",
-    description=" ",
-    long_description_content_type="text/markdown",
+    description="A tool that generates yaml cell type marker which maps cell types to gene expression.",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/camlab-bioml/margo",
     packages=["margo"],
     classifiers=[
