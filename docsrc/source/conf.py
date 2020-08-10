@@ -19,7 +19,7 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'mentor'
+project = 'margo'
 copyright = '2020, Campbell Lab'
 author = 'Jinyu Hou'
 

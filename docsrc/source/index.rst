@@ -1,10 +1,10 @@
-.. mentor documentation master file, created by
+.. margo documentation master file, created by
    sphinx-quickstart on Wed Aug  5 09:18:37 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 **************************
-Documentation for Mentor
+Documentation for Margo
 **************************
 .. toctree::
    :maxdepth: 2
@@ -16,7 +16,7 @@ Documentation for Mentor
 .. * :ref:`modindex`
 .. * :ref:`search`
 
-Mentor is a tool that generates yaml cell type marker which maps cell types to gene expression 
+Margo is a tool that generates yaml cell type marker which maps cell types to gene expression 
 from csv gene expression files.
 
 --------------
@@ -24,14 +24,14 @@ Installation
 --------------
 ::
 
-   pip install mentor
+   pip install margo
 
 --------------
 Usage
 --------------
 ::
 
-   mentor <input_csv> <output_yaml> -t/--tissue <specified_tissues> -m/--min_marker_per_celltype <min_marker_per_celltype>
+   margo <input_csv> <output_yaml> -t/--tissue <specified_tissues> -m/--min_marker_per_celltype <min_marker_per_celltype>
 
 **Notes:**
 
