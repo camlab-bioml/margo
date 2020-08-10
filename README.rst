@@ -10,7 +10,7 @@ Documentation for Margo
 Margo is a tool that generates yaml cell type marker which maps cell types to gene expression 
 from csv gene expression files.
 
-Checkout a full documentation `here <https://camlab-bioml.github.io/margo/>`_ or the `Github Page <https://github.com/camlab-bioml/margo>`_.
+Checkout a full documentation `here <https://camlab-bioml.github.io/margo/>`_.
 
 --------------
 Installation
