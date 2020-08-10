@@ -4,15 +4,15 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="mentor",
+    name="margo",
     version="0.0.1",
     author="Jinyu Hou",
     author_email="jhou@lunenfeld.ca",
     description=" ",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/camlab-bioml/mentor",
-    packages=["mentor"],
+    url="https://github.com/camlab-bioml/margo",
+    packages=["margo"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
@@ -29,5 +29,5 @@ setuptools.setup(
         # "rinohtype"
     ],
     include_package_data=True,
-    scripts=["bin/mentor"],
+    scripts=["bin/margo"],
 )

@@ -1,4 +1,4 @@
-# MENTOR (MarkerGenerator)
+# MARGO (MarkerGenerator)
 
 A tool that generates yaml cell type marker which maps cell types to gene expression.    
 
@@ -6,12 +6,12 @@ A tool that generates yaml cell type marker which maps cell types to gene expres
 
 Install by running:
 ```
-pip install mentor
+pip install margo
 ```
 
 ## Documentation
 
-Check out a full description of the project [here](https://camlab-bioml.github.io/mentor/).
+Check out a full description of the project [here](https://camlab-bioml.github.io/margo/).
 
 ## Reference
 
