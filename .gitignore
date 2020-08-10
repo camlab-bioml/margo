@@ -1,3 +1,5 @@
+mentor/tests/test-data/*.yml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
