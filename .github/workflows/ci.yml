@@ -40,7 +40,7 @@ jobs:
       run: |
         pip install pytest
         pip install pytest-cov
-        pytest --cov=mentor
+        pytest --cov=margo
     - name: Upload coverage
       shell: pwsh
       run: coverage report -m

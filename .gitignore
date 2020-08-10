@@ -1,4 +1,4 @@
-mentor/tests/test-data/*.yml
+margo/tests/test-data/*.yml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
