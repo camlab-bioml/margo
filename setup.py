@@ -24,6 +24,7 @@ setuptools.setup(
         "pandas",
         "pyyaml",
         "argparse",
+        "rootpath"
         # "sphinx",
         # "rinohtype"
     ],
