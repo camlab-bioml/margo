@@ -6,6 +6,13 @@
 **************************
 Margo (Marker Generator)
 **************************
+.. image:: https://travis-ci.com/camlab-bioml/margo.svg?branch=master
+    :target: https://travis-ci.com/camlab-bioml/margo 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+.. image:: https://img.shields.io/badge/License-GPL%20v2-blue.svg
+    :target: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+
 
 Margo is a tool that generates yaml cell type marker which maps cell types to gene expression 
 from csv gene expression files.
