@@ -17,6 +17,7 @@ rootpath = "*"
 black = "*"
 pytest-cov = "*"
 mypy = "*"
+isort = "*"
 
 [requires]
 python_version = "3.8"

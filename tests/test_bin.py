@@ -1,10 +1,11 @@
-import unittest
-import rootpath
-import pandas as pd
-import yaml
 import os
-import sys
 import subprocess
+import sys
+import unittest
+
+import pandas as pd
+import rootpath
+import yaml
 
 # import torch
 # import warnings

@@ -1,6 +1,7 @@
+from typing import List, Optional
+
 import pandas as pd
 import yaml
-from typing import Optional, List
 
 
 class MarkerGenerator:
