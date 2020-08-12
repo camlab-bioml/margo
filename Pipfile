@@ -16,6 +16,7 @@ argparse = "*"
 rootpath = "*"
 black = "*"
 pytest-cov = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.8"
