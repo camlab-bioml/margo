@@ -17,14 +17,16 @@ class TestMargo(TestCase):
         self._features = exp_df.columns
         self._database = [
             os.path.join(
-                os.path.dirname(__file__), "../margo/marker_database/CellMarker-company.csv"
+                os.path.dirname(__file__),
+                "../margo/marker_database/CellMarker-company.csv",
             ),
             os.path.join(
                 os.path.dirname(__file__),
                 "../margo/marker_database/CellMarker-experiment.csv",
             ),
             os.path.join(
-                os.path.dirname(__file__), "../margo/marker_database/CellMarker-review.csv"
+                os.path.dirname(__file__),
+                "../margo/marker_database/CellMarker-review.csv",
             ),
             os.path.join(
                 os.path.dirname(__file__), "../margo/marker_database/CellMarker-scs.csv"
@@ -36,8 +38,11 @@ class TestMargo(TestCase):
         self._database_df = pd.DataFrame()
         for db in self._database:
             self._database_df = pd.concat([self._database_df, pd.read_csv(db)])
-        self._mg = MarkerGenerator(os.path.join(os.path.dirname(__file__), "test-data/exp_data.csv"),
-            self._database, self._alias)
+        self._mg = MarkerGenerator(
+            os.path.join(os.path.dirname(__file__), "test-data/exp_data.csv"),
+            self._database,
+            self._alias,
+        )
 
     def test_empty_feature(self):
         self._mg.construct_marker_mat_from_db()
@@ -46,17 +51,14 @@ class TestMargo(TestCase):
 
     def test_min_marker(self):
         min_marker = np.random.randint(2, 5)
-        self._mg.construct_marker_mat_from_db(
-            min_marker=min_marker,
-        )
+        self._mg.construct_marker_mat_from_db(min_marker=min_marker,)
         marker_mat = self._mg.get_marker_mat()
         self.assertTrue((marker_mat.sum(axis=0) >= min_marker).all(), True)
 
     def test_tissue_selection(self):
         tissues = ["Breast", "Blood"]
         self._mg.construct_marker_mat_from_db(
-            tissue=tissues,
-            min_marker=4,
+            tissue=tissues, min_marker=4,
         )
         marker_mat = self._mg.get_marker_mat()
         types = marker_mat.index
@@ -67,13 +69,13 @@ class TestMargo(TestCase):
 
     def test_to_yaml(self):
         self._mg.construct_marker_mat_from_db(
-            tissue=["Breast"],
-            min_marker=3,
+            tissue=["Breast"], min_marker=3,
         )
         expected = self._mg.get_marker_dict()
-        output_path = os.path.join(os.path.dirname(__file__),"test-data/test_output.yml")
+        output_path = os.path.join(
+            os.path.dirname(__file__), "test-data/test_output.yml"
+        )
         self._mg.to_yaml(output_path)
         with open(output_path, "r") as stream:
             actual = yaml.safe_load(stream)
         self.assertEqual(expected, actual)
-

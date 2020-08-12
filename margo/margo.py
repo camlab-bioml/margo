@@ -6,8 +6,10 @@ from typing import Optional, List
 class MarkerGenerator:
     """ A yaml cell type to gene expression marker generator.
     """
-    
-    def __init__(self, expr_csv: str, database: List[str], alias_marker: Optional[str]=None) -> None:
+
+    def __init__(
+        self, expr_csv: str, database: List[str], alias_marker: Optional[str] = None
+    ) -> None:
         """ Initialize MarkerGenerator.
 
         :param exp_csv: path to the input csv file
@@ -26,7 +28,6 @@ class MarkerGenerator:
         self._database_df = self._construct_database(database)
         self._marker_mat = pd.DataFrame()
 
-
     def _lookup(self, row: pd.DataFrame) -> pd.DataFrame:
         """ Helper for building marker matrix.
 
@@ -44,17 +45,38 @@ class MarkerGenerator:
             if (self._alias_dict is None) or (f not in self._alias_dict):
                 if f in mks:
                     mk_df = pd.concat(
-                        [mk_df, pd.DataFrame([[f, row["Cell Type"].values[0], row["Tissue"].values[0]]])]
+                        [
+                            mk_df,
+                            pd.DataFrame(
+                                [
+                                    [
+                                        f,
+                                        row["Cell Type"].values[0],
+                                        row["Tissue"].values[0],
+                                    ]
+                                ]
+                            ),
+                        ]
                     )
             else:
                 alias = self._alias_dict[f]
                 for m in mks:
                     if m in alias:
                         mk_df = pd.concat(
-                            [mk_df, pd.DataFrame([[f, row["Cell Type"].values[0], row["Tissue"].values[0]]])]
+                            [
+                                mk_df,
+                                pd.DataFrame(
+                                    [
+                                        [
+                                            f,
+                                            row["Cell Type"].values[0],
+                                            row["Tissue"].values[0],
+                                        ]
+                                    ]
+                                ),
+                            ]
                         )
         return mk_df
-
 
     def _collapse_celltype(self) -> None:
         """ A helper to collapse cell types with the same features into one single type.
@@ -117,9 +139,8 @@ class MarkerGenerator:
         marker.index = list(range(marker.shape[0]))
         return marker
 
-
-    def construct_marker_mat_from_db(self,
-        tissue: List[str]=None, min_marker: int=1,
+    def construct_marker_mat_from_db(
+        self, tissue: List[str] = None, min_marker: int = 1,
     ) -> None:
         """ The main function to construct marker matrix.
 
@@ -132,7 +153,9 @@ class MarkerGenerator:
         if tissue is not None:
             marker_df = pd.DataFrame()
             for t in tissue:
-                marker_df = pd.concat([marker_df, self._database_df[self._database_df.tissue == t]])
+                marker_df = pd.concat(
+                    [marker_df, self._database_df[self._database_df.tissue == t]]
+                )
         else:
             marker_df = self._database_df
 
@@ -155,7 +178,9 @@ class MarkerGenerator:
         """
         type_marker = {}
         for ct in self._marker_mat.columns:
-            features = [f for f in self._marker_mat.index if self._marker_mat[ct][f] == 1]
+            features = [
+                f for f in self._marker_mat.index if self._marker_mat[ct][f] == 1
+            ]
             type_marker[ct] = features
         return {"cell_type": type_marker}
 

@@ -30,14 +30,16 @@ class TestBinMargo(unittest.TestCase):
         )
         self._database = [
             os.path.join(
-                os.path.dirname(__file__), "../margo/marker_database/CellMarker-company.csv"
+                os.path.dirname(__file__),
+                "../margo/marker_database/CellMarker-company.csv",
             ),
             os.path.join(
                 os.path.dirname(__file__),
                 "../margo/marker_database/CellMarker-experiment.csv",
             ),
             os.path.join(
-                os.path.dirname(__file__), "../margo/marker_database/CellMarker-review.csv"
+                os.path.dirname(__file__),
+                "../margo/marker_database/CellMarker-review.csv",
             ),
             os.path.join(
                 os.path.dirname(__file__), "../margo/marker_database/CellMarker-scs.csv"
