@@ -1,0 +1,13 @@
+site_name: samplemod
+site_description: Refreshingly simple new project generation.
+site_url: https://github.com/iancleary/pypackage
+
+theme:
+    name: 'material'
+
+repo_name: iancleary/pypackage
+repo_url: https://github.com/iancleary/pypackage
+edit_uri: ''
+
+nav:
+    - samplemod: 'index.md'

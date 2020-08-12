@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "samplemod"
+version = "0.0.4"
+description = "Tools to convert SQLAlchemy models to Pydantic models"
+authors = ["Ian Cleary <iancleary@pm.me>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.6.1"
+pydantic = "^1.5.1"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.782"
+black = "^19.10b0"
+isort = "^5.0.5"
+autoflake = "^1.3.1"
+flake8 = "^3.7.9"
+pre-commit = "^2.4.0"
+pytest = "^6.0.1"
+pytest-cov = "^2.8.1"
+mkdocs = "^1.1"
+mkdocs-material = "^5.1.5"
+markdown-include = "^0.5.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

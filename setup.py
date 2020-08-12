@@ -5,7 +5,7 @@ with open("README.rst", "r") as fh:
 
 setuptools.setup(
     name="margo",
-    version="0.0.3",
+    version="0.0.4",
     author="Jinyu Hou",
     author_email="jhou@lunenfeld.ca",
     description="A tool that generates yaml cell type marker which maps cell types to gene expression.",
@@ -20,14 +20,7 @@ setuptools.setup(
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
     license="GPLv2",
-    install_requires=[
-        "pandas",
-        "pyyaml",
-        "argparse",
-        "rootpath"
-        # "sphinx",
-        # "rinohtype"
-    ],
+    install_requires=["pandas", "pyyaml", "argparse", "rootpath"],
     include_package_data=True,
     scripts=["bin/margo"],
 )

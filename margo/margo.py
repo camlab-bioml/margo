@@ -21,24 +21,32 @@ def lookup(row, features, alias_dict):
     for f in features:
         if (alias_dict is None) or (f not in alias_dict):
             if f in mks:
-                mk_df = pd.concat([mk_df, pd.DataFrame([[f, row["Cell Type"].values[0]]])])
+                mk_df = pd.concat(
+                    [mk_df, pd.DataFrame([[f, row["Cell Type"].values[0]]])]
+                )
         else:
             alias = alias_dict[f]
             for m in mks:
                 if m in alias:
-                    mk_df = pd.concat([mk_df, pd.DataFrame([[f, row["Cell Type"].values[0]]])])
+                    mk_df = pd.concat(
+                        [mk_df, pd.DataFrame([[f, row["Cell Type"].values[0]]])]
+                    )
     return mk_df
 
 
 def collapse_celltype(marker_mat: pd.DataFrame) -> pd.DataFrame:
     for t1 in range(len(marker_mat.columns)):
         type1 = marker_mat.columns[t1]
-        for t2 in range(t1+1, len(marker_mat.columns)):
+        for t2 in range(t1 + 1, len(marker_mat.columns)):
             type2 = marker_mat.columns[t2]
-            if (type1 != "NA" and type2 != "NA" and 
-                marker_mat[type1].equals(marker_mat[type2])):
-                marker_mat = marker_mat.rename(columns={type1: f"{type1}/{type2}", 
-                    type2: "NA"})
+            if (
+                type1 != "NA"
+                and type2 != "NA"
+                and marker_mat[type1].equals(marker_mat[type2])
+            ):
+                marker_mat = marker_mat.rename(
+                    columns={type1: f"{type1}/{type2}", type2: "NA"}
+                )
                 type1 = f"{type1}/{type2}"
     if "NA" in marker_mat.columns:
         marker_mat = marker_mat.drop("NA", axis=1)
@@ -52,20 +60,20 @@ def collapse_celltype(marker_mat: pd.DataFrame) -> pd.DataFrame:
 #             marker_mat = marker_mat.drop(ct, axis=1)
 #     return marker_mat
 
+
 def drop_n_marker(marker_mat: pd.DataFrame, n_marker) -> pd.DataFrame:
     if n_marker < 1:
-        raise NotGeneratableError("<min_marker_per_celltype> should be greater or equal to 1.")
+        raise NotGeneratableError(
+            "<min_marker_per_celltype> should be greater or equal to 1."
+        )
     for ct in marker_mat.columns:
         if marker_mat[ct].sum() < n_marker:
             marker_mat = marker_mat.drop(ct, axis=1)
     return marker_mat
 
 
-def construct_marker_mat_from_db(features: list, 
-    database: list, 
-    alias_marker = None, 
-    tissue = None,
-    min_marker = 1,
+def construct_marker_mat_from_db(
+    features: list, database: list, alias_marker=None, tissue=None, min_marker=1,
 ) -> pd.DataFrame:
     if tissue is not None:
         tissue = tissue.split(",")
@@ -87,7 +95,7 @@ def construct_marker_mat_from_db(features: list,
             marker_df = temp_df
 
         for r in range(marker_df.shape[0] - 1):
-            new_row = lookup(marker_df[r:r+1], features, alias_dict)
+            new_row = lookup(marker_df[r : r + 1], features, alias_dict)
             # if new_row is not None:
             #     marker = pd.concat([marker, new_row])
             marker = pd.concat([marker, new_row])
@@ -98,10 +106,14 @@ def construct_marker_mat_from_db(features: list,
     marker.index = list(range(marker.shape[0]))
     # print(marker)
 
-    marker_mat = pd.DataFrame(data=0, index=list(set(marker["feature"])), columns=list(set(marker["cell_type"])))
+    marker_mat = pd.DataFrame(
+        data=0,
+        index=list(set(marker["feature"])),
+        columns=list(set(marker["cell_type"])),
+    )
     for i in marker.index:
         marker_mat[marker["cell_type"][i]][marker["feature"][i]] = 1
-    
+
     marker_mat = collapse_celltype(marker_mat)
     marker_mat = drop_n_marker(marker_mat, min_marker)
     return marker_mat
@@ -113,19 +125,20 @@ def to_yaml(marker_mat: pd.DataFrame, name: str) -> None:
         features = [f for f in marker_mat.index if marker_mat[ct][f] == 1]
         type_marker[ct] = features
     marker = {"cell_type": type_marker}
-    
-    with open(name, 'w') as yam:
+
+    with open(name, "w") as yam:
         yaml.dump(marker, yam, width=2000, default_flow_style=False)
-    
+
 
 class NotGeneratableError(Exception):
     pass
 
+
 # if __name__ == "__main__":
 #     # exp_csv = "../BaselTMA_SP43_115_X4Y8.csv"
-#     cell_marker = ["../marker_database/CellMarker-company.csv", 
-#         "../marker_database/CellMarker-experiment.csv", 
-#         "../marker_database/CellMarker-review.csv", 
+#     cell_marker = ["../marker_database/CellMarker-company.csv",
+#         "../marker_database/CellMarker-experiment.csv",
+#         "../marker_database/CellMarker-review.csv",
 #         "../marker_database/CellMarker-scs.csv"]
 #     # alias_marker = "./marker_database/alias.yml"
 # #     tissue = "Blood"
@@ -133,8 +146,8 @@ class NotGeneratableError(Exception):
 #     # features = exp_df.columns
 
 # #     # features = ["CD45", "CD3", "CD8"]
-#     # marker_mat = construct_marker_mat_from_db(features=features, 
-#     #     database=cell_marker, 
+#     # marker_mat = construct_marker_mat_from_db(features=features,
+#     #     database=cell_marker,
 #     #     alias_marker=alias_marker,
 #     #     tissue=tissue)
 # #     # marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
