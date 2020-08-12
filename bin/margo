@@ -1,6 +1,7 @@
-import argparse, os
-from margo import MarkerGenerator
+import argparse
+import os
 
+from margo import MarkerGenerator
 
 parser = argparse.ArgumentParser(description='Generate astir marker')
 parser.add_argument("expr_csv", help="Path to CSV expression matrix which is to be used for astir classification.")

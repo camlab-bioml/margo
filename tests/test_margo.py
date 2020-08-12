@@ -5,8 +5,6 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from margo.margo import MarkerGenerator
-
 
 class TestMargo(TestCase):
     def __init__(self, *args, **kwargs):
@@ -39,6 +37,8 @@ class TestMargo(TestCase):
         self._database_df = pd.DataFrame()
         for db in self._database:
             self._database_df = pd.concat([self._database_df, pd.read_csv(db)])
+        from margo import MarkerGenerator
+
         self._mg = MarkerGenerator(
             os.path.join(os.path.dirname(__file__), "test-data/exp_data.csv"),
             self._database,

@@ -7,20 +7,6 @@ import pandas as pd
 import rootpath
 import yaml
 
-# import torch
-# import warnings
-
-# #
-# # module_path = rootpath.detect()
-# # if module_path not in sys.path:
-# #     sys.path.append(module_path)
-# # print(sys.path)
-# #
-# # module_path = os.path.join(rootpath.detect(), "astir")
-# # if module_path not in sys.path:
-# #     sys.path.append(module_path)
-# # print(sys.path)
-
 
 class TestBinMargo(unittest.TestCase):
     def __init__(self, *args, **kwargs):
