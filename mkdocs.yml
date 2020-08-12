@@ -1,13 +1,13 @@
-site_name: samplemod
-site_description: Refreshingly simple new project generation.
-site_url: https://github.com/iancleary/pypackage
+site_name: margo
+site_description: Margo is a tool that generates yaml cell type marker which maps cell types to gene expression from csv gene expression files.
+site_url: https://github.com/camlab-bioml/margo
 
 theme:
     name: 'material'
 
-repo_name: iancleary/pypackage
-repo_url: https://github.com/iancleary/pypackage
+repo_name: camlab-bioml/margo
+repo_url: https://github.com/camlab-bioml/margo
 edit_uri: ''
 
-nav:
-    - samplemod: 'index.md'
+# nav:
+#     - margo: 'index.md'

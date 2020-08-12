@@ -5,7 +5,7 @@ with open("README.rst", "r") as fh:
 
 setuptools.setup(
     name="margo",
-    version="0.0.4",
+    version="0.0.5",
     author="Jinyu Hou",
     author_email="jhou@lunenfeld.ca",
     description="A tool that generates yaml cell type marker which maps cell types to gene expression.",

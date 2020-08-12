@@ -60,5 +60,5 @@ deploy-docs:
 
 install: ## uninstall and install package with python
 install:
-	poetry remove ./samplemod
-	poetry add ./samplemod
+	poetry remove ./margo
+	poetry add ./margo
