@@ -1,13 +1,15 @@
 import argparse
 import os
+import time
 
 from margo import MarkerGenerator
 
 parser = argparse.ArgumentParser(description='Generate astir marker')
 parser.add_argument("expr_csv", help="Path to CSV expression matrix which is to be used for astir classification.")
-parser.add_argument("marker_yaml", help="Path to output marker yaml file.")
-parser.add_argument("-d", "--database", 
-                    type=str,
+parser.add_argument("-y", "--marker_yaml", 
+                    default='',
+                    help="Path to output marker yaml file.")
+parser.add_argument("-d", "--database",
                     nargs='+',
                     default=[],
                     help="Specified one or more databases. Separate them with spaces (e.g. '-d panglao cellmarker').\
@@ -22,8 +24,7 @@ parser.add_argument("-m", "--min_marker_per_celltype",
                     type=int,
                     default=1,
                     help="Minimum marker per cell type needed to have to be included.")
-parser.add_argument("-t", "--tissue", 
-                    type=str,
+parser.add_argument("-t", "--tissue",
                     nargs='+',
                     default=[],
                     help="Tissue specified to be searched within. If meant to include more than one tissue, \
@@ -66,11 +67,9 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
-    # cur_path = os.path.dirname(os.path.realpath(__file__))
-    # cell_marker = [f"{cur_path}/../margo/marker_database/{f}" for f 
-    #     in os.listdir(f"{cur_path}/../margo/marker_database") if ".csv" in f]
-    # alias_marker = f"{cur_path}/../margo/marker_database/alias.yml"
-
+    output = args.marker_yaml
+    if output == '':
+        output = f'{os.path.dirname(args.expr_csv)}/margo_marker_{time.strftime("%m.%d.%y-%H:%M", time.localtime())}.yml'
     tissue = args.tissue
     if tissue == [] or "all" in tissue:
         tissue = None
@@ -83,8 +82,8 @@ if __name__ == "__main__":
         tissue=tissue,
         min_marker=args.min_marker_per_celltype
     )
-    mg.to_yaml(args.marker_yaml)
+    mg.to_yaml(output)
 
-    print(f"Corresponding marker file generated as {args.marker_yaml}.")
+    print(f"Corresponding marker file generated as {output}.")
 
 # margo ../BaselTMA_SP43_115_X4Y8.csv ../test_marker.yml -d panglao -t Brain "Immune system" -m 3
