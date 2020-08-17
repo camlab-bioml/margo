@@ -6,17 +6,30 @@ from margo import MarkerGenerator
 parser = argparse.ArgumentParser(description='Generate astir marker')
 parser.add_argument("expr_csv", help="Path to CSV expression matrix which is to be used for astir classification.")
 parser.add_argument("marker_yaml", help="Path to output marker yaml file.")
+parser.add_argument("-d", "--database", 
+                    type=str,
+                    nargs='+',
+                    default=[],
+                    help="Specified one or more databases. Separate them with spaces (e.g. '-d panglao cellmarker').\
+                         If not specified or specified with 'all'(-d all), all databases will be used.\
+                        ---------------------------------------------------- Currently available databases: \
+                        'panglao', 'cellmarker'")
+parser.add_argument("-u", "--update_database", 
+                    type=bool,
+                    default=False,
+                    help="Update databases specified by '-d' from the internet if set to True.")
 parser.add_argument("-m", "--min_marker_per_celltype", 
                     type=int,
                     default=1,
                     help="Minimum marker per cell type needed to have to be included.")
 parser.add_argument("-t", "--tissue", 
                     type=str,
-                    default="",
+                    nargs='+',
+                    default=[],
                     help="Tissue specified to be searched within. If meant to include more than one tissue, \
-                        seperate them with comma (e.g. '-t Blood,Breast'). If specified with 'all' ('-t all')\
+                        seperate them with space (e.g. '-t Blood Breast'). If specified with 'all' ('-t all')\
                          or not specified (flag not included), the whole dataset is to be searched within.\
-                        ---------------------------------------------------- Available tissues includes: \
+                        ---------------------------------------------------- Available tissues in CellMarker Database: \
                         'Abdominal adipose tissue', 'Adipose tissue', 'Adrenal gland', 'Adventitia', 'Airway epithelium',\
                          'Alveolus', 'Amniotic fluid', 'Amniotic membrane', 'Antecubital vein', 'Anterior cruciate ligament',\
                          'Artery', 'Ascites', 'Bladder', 'Blood', 'Blood vessel', 'Bone', 'Bone marrow', 'Brain', 'Breast',\
@@ -43,7 +56,12 @@ parser.add_argument("-t", "--tissue",
                          'Sympathetic ganglion', 'Synovial fluid', 'Synovium', 'Tendon', 'Testis', 'Thymus', 'Thyroid',\
                          'Tongue', 'Tonsil', 'Tooth', 'Umbilical cord', 'Umbilical cord blood', 'Umbilical vein',\
                          'Undefined', 'Urine', 'Uterus', 'Vagina', 'Venous blood', 'Visceral adipose tissue', 'Vocal fold',\
-                         'Whartons jelly', 'White adipose tissue'")
+                         'Whartons jelly', 'White adipose tissue'\
+                        ---------------------------------------------------- Available tissues in Panglao Database: \
+                        'Adrenal glands', 'Blood', 'Bone', 'Brain', 'Connective tissue', 'Embryo', 'Epithelium', 'Eye',\
+                         'GI tract', 'Heart', 'Immune system', 'Kidney', 'Liver', 'Lungs', 'Mammary gland', 'Olfactory system',\
+                         'Oral cavity', 'Pancreas', 'Parathyroid glands', 'Placenta', 'Reproductive', 'Skeletal muscle', 'Skin',\
+                         'Smooth muscle', 'Thymus', 'Thyroid', 'Urinary bladder', 'Vasculature', 'Zygote'")
 args = parser.parse_args()
 
 
@@ -53,12 +71,14 @@ if __name__ == "__main__":
     #     in os.listdir(f"{cur_path}/../margo/marker_database") if ".csv" in f]
     # alias_marker = f"{cur_path}/../margo/marker_database/alias.yml"
 
-    if args.tissue == "" or args.tissue == "all":
+    tissue = args.tissue
+    if tissue == [] or "all" in tissue:
         tissue = None
-    else:
-        tissue = args.tissue.split(",")
+    database = args.database
+    if database == [] or "all" in database:
+        database = None
 
-    mg = MarkerGenerator(expr_csv=args.expr_csv, database=cell_marker)
+    mg = MarkerGenerator(expr_csv=args.expr_csv, database=database, update_db=args.update_database)
     mg.construct_marker_mat_from_db(
         tissue=tissue,
         min_marker=args.min_marker_per_celltype
@@ -67,4 +87,4 @@ if __name__ == "__main__":
 
     print(f"Corresponding marker file generated as {args.marker_yaml}.")
 
-# margo ../BaselTMA_SP43_115_X4Y8.csv ../test_marker.yml -t Breast,Blood -m 3
+# margo ../BaselTMA_SP43_115_X4Y8.csv ../test_marker.yml -d panglao -t Brain "Immune system" -m 3

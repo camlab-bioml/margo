@@ -1,12 +1,13 @@
+import os
 from typing import List, Optional
 
 import pandas as pd
 import yaml
-from database import download_databases
-from settings import LOCAL_DATABASES, ALIAS
-import os
 
-root_path = os.path.join(os.path.dirname(__file__), '..')
+from margo.database import download_databases
+from settings import ALIAS, LOCAL_DATABASES
+
+root_path = os.path.join(os.path.dirname(__file__), "..")
 
 
 class MarkerGenerator:
@@ -14,7 +15,7 @@ class MarkerGenerator:
     """
 
     def __init__(
-        self, expr_csv: str, database: List[str], update_db: bool = False
+        self, expr_csv: str, database: List[str] = None, update_db: bool = False
     ) -> None:
         """ Initialize MarkerGenerator.
 
@@ -118,7 +119,9 @@ class MarkerGenerator:
             if self._marker_mat[ct].sum() < n_marker:
                 self._marker_mat = self._marker_mat.drop(ct, axis=1)
 
-    def _construct_database(self, database: List[str], update_db: bool) -> pd.DataFrame:
+    def _construct_database(
+        self, database: Optional[List[str]], update_db: bool
+    ) -> pd.DataFrame:
         """ Helper for constructing database df.
 
         :param database: list of paths to the input database files
@@ -126,12 +129,16 @@ class MarkerGenerator:
         :return:  corresponding database
         :rtype: pd.DataFrame
         """
+        if database is None:
+            database = list(LOCAL_DATABASES.keys())
         if update_db:
             download_databases(database)
         marker = pd.DataFrame()
         for db in database:
             if db not in LOCAL_DATABASES:
-                raise Exception(f"Margo currently doesn't support {db}, entre 'margo -h' for a list of supporting databases.")
+                raise Exception(
+                    f"Margo currently doesn't support {db}, entre 'margo -h' for a list of supporting databases."
+                )
             path = os.path.join(root_path, LOCAL_DATABASES[db])
             marker_df = pd.read_csv(path)
             # if tissue is not None:
@@ -219,11 +226,11 @@ class NotGeneratableError(Exception):
     pass
 
 
-if __name__ == "__main__":
-    mg = MarkerGenerator("../tests/test-data/exp_data.csv", ['panglao'])
-    mg.construct_marker_mat_from_db(["Immune system"], min_marker=3)
-    mg.to_yaml("../tests/test-data/test_output.yml")
+# if __name__ == "__main__":
+#     mg = MarkerGenerator("../tests/test-data/exp_data.csv", ['panglao', 'cellmarker'])
+#     mg.construct_marker_mat_from_db(["Immune system", 'Breast'], min_marker=3)
+#     mg.to_yaml("../tests/test-data/test_output.yml")
 
 ##TODO: update available tissues
 ##TODO: update documentations
-##TODO: 
+##TODO: update tests

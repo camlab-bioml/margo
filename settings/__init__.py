@@ -1,2 +1,2 @@
+from .paths import ALIAS, LOCAL_DATABASES, MARGO
 from .urls import DATABASES
-from .paths import LOCAL_DATABASES, MARGO, ALIAS

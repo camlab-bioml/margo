@@ -20,7 +20,7 @@ setuptools.setup(
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
     license="GPLv2",
-    install_requires=["pandas", "pyyaml", "argparse", "rootpath", 'requests'],
+    install_requires=["pandas", "pyyaml", "argparse", "rootpath", "requests"],
     include_package_data=True,
     scripts=["bin/margo"],
 )
