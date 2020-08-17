@@ -48,17 +48,17 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
-    cur_path = os.path.dirname(os.path.realpath(__file__))
-    cell_marker = [f"{cur_path}/../margo/marker_database/{f}" for f 
-        in os.listdir(f"{cur_path}/../margo/marker_database") if ".csv" in f]
-    alias_marker = f"{cur_path}/../margo/marker_database/alias.yml"
+    # cur_path = os.path.dirname(os.path.realpath(__file__))
+    # cell_marker = [f"{cur_path}/../margo/marker_database/{f}" for f 
+    #     in os.listdir(f"{cur_path}/../margo/marker_database") if ".csv" in f]
+    # alias_marker = f"{cur_path}/../margo/marker_database/alias.yml"
 
     if args.tissue == "" or args.tissue == "all":
         tissue = None
     else:
         tissue = args.tissue.split(",")
 
-    mg = MarkerGenerator(expr_csv=args.expr_csv, database=cell_marker, alias_marker=alias_marker)
+    mg = MarkerGenerator(expr_csv=args.expr_csv, database=cell_marker)
     mg.construct_marker_mat_from_db(
         tissue=tissue,
         min_marker=args.min_marker_per_celltype

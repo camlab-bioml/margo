@@ -2,6 +2,11 @@ from typing import List, Optional
 
 import pandas as pd
 import yaml
+from database import download_databases
+from settings import LOCAL_DATABASES, ALIAS
+import os
+
+root_path = os.path.join(os.path.dirname(__file__), '..')
 
 
 class MarkerGenerator:
@@ -9,27 +14,27 @@ class MarkerGenerator:
     """
 
     def __init__(
-        self, expr_csv: str, database: List[str], alias_marker: Optional[str] = None
+        self, expr_csv: str, database: List[str], update_db: bool = False
     ) -> None:
         """ Initialize MarkerGenerator.
 
         :param exp_csv: path to the input csv file
         :type exp_csv: str
-        :param database: list of paths to the input database files
-        :type database: str
+        :param database: list of databases
+        :type database: List[str]
         :param alias_marker: path to the input alias marker file, defaults to None
         :type alias_marker: str, optional
         """
         expr_df = pd.read_csv(expr_csv, index_col=0)
         self._features = expr_df.columns
-        self._alias_dict = None
-        if alias_marker is not None:
-            with open(alias_marker, "r") as stream:
-                self._alias_dict = yaml.safe_load(stream)
-        self._database_df = self._construct_database(database)
+        # self._alias_dict = None
+        # if alias_marker is not None:
+        with open(os.path.join(root_path, ALIAS), "r") as stream:
+            self._alias_dict = yaml.safe_load(stream)
+        self._database_df = self._construct_database(database, update_db)
         self._marker_mat = pd.DataFrame()
 
-    def _lookup(self, row: pd.DataFrame) -> pd.DataFrame:
+    def _lookup_cellmarker(self, row: pd.DataFrame) -> pd.DataFrame:
         """ Helper for building marker matrix.
 
         :param row: a single row to be checked
@@ -37,7 +42,7 @@ class MarkerGenerator:
         :return: a single row to be added to the marker matrix
         :rtype: pd.DataFrame
         """
-        mks = row["Cell Marker"].values[0]
+        mks = row["marker"].values[0]
         mks = mks.split(",")
         mks = [m.strip() for m in mks]
 
@@ -52,8 +57,8 @@ class MarkerGenerator:
                                 [
                                     [
                                         f,
-                                        row["Cell Type"].values[0],
-                                        row["Tissue"].values[0],
+                                        row["cell_type"].values[0],
+                                        row["tissue"].values[0],
                                     ]
                                 ]
                             ),
@@ -70,8 +75,8 @@ class MarkerGenerator:
                                     [
                                         [
                                             f,
-                                            row["Cell Type"].values[0],
-                                            row["Tissue"].values[0],
+                                            row["cell_type"].values[0],
+                                            row["tissue"].values[0],
                                         ]
                                     ]
                                 ),
@@ -113,7 +118,7 @@ class MarkerGenerator:
             if self._marker_mat[ct].sum() < n_marker:
                 self._marker_mat = self._marker_mat.drop(ct, axis=1)
 
-    def _construct_database(self, database: List[str]) -> pd.DataFrame:
+    def _construct_database(self, database: List[str], update_db: bool) -> pd.DataFrame:
         """ Helper for constructing database df.
 
         :param database: list of paths to the input database files
@@ -121,9 +126,14 @@ class MarkerGenerator:
         :return:  corresponding database
         :rtype: pd.DataFrame
         """
+        if update_db:
+            download_databases(database)
         marker = pd.DataFrame()
         for db in database:
-            marker_df = pd.read_csv(db)
+            if db not in LOCAL_DATABASES:
+                raise Exception(f"Margo currently doesn't support {db}, entre 'margo -h' for a list of supporting databases.")
+            path = os.path.join(root_path, LOCAL_DATABASES[db])
+            marker_df = pd.read_csv(path)
             # if tissue is not None:
             #     temp_df = pd.DataFrame()
             #     for t in tissue:
@@ -131,7 +141,7 @@ class MarkerGenerator:
             #     marker_df = temp_df
 
             for r in range(marker_df.shape[0] - 1):
-                new_row = self._lookup(marker_df[r : r + 1])
+                new_row = self._lookup_cellmarker(marker_df[r : r + 1])
                 marker = pd.concat([marker, new_row])
         if marker.shape == (0, 0):
             raise NotGeneratableError("<tissue> does not exist in the tissue list.")
@@ -141,13 +151,13 @@ class MarkerGenerator:
         return marker
 
     def construct_marker_mat_from_db(
-        self, tissue: List[str] = None, min_marker: int = 1,
+        self, tissue: List[str] = None, min_marker: int = 2,
     ) -> None:
         """ The main function to construct marker matrix.
 
         :param tissue: specified tissue to be searched within, defaults to None
         :type tissue: str, optional
-        :param min_marker: specified minimum amount of features for each cell type, defaults to 1
+        :param min_marker: specified minimum amount of features for each cell type, defaults to 2
         :type min_marker: int, optional
         :raises NotGeneratableError: raised when `tissue` does not exist in the tissue list
         """
@@ -209,33 +219,11 @@ class NotGeneratableError(Exception):
     pass
 
 
-# if __name__ == "__main__":
-#     # exp_csv = "../BaselTMA_SP43_115_X4Y8.csv"
-#     cell_marker = ["../marker_database/CellMarker-company.csv",
-#         "../marker_database/CellMarker-experiment.csv",
-#         "../marker_database/CellMarker-review.csv",
-#         "../marker_database/CellMarker-scs.csv"]
-#     # alias_marker = "./marker_database/alias.yml"
-# #     tissue = "Blood"
-#     # exp_df = pd.read_csv(exp_csv, index_col=0)
-#     # features = exp_df.columns
+if __name__ == "__main__":
+    mg = MarkerGenerator("../tests/test-data/exp_data.csv", ['panglao'])
+    mg.construct_marker_mat_from_db(["Immune system"], min_marker=3)
+    mg.to_yaml("../tests/test-data/test_output.yml")
 
-# #     # features = ["CD45", "CD3", "CD8"]
-#     # marker_mat = construct_marker_mat_from_db(features=features,
-#     #     database=cell_marker,
-#     #     alias_marker=alias_marker,
-#     #     tissue=tissue)
-# #     # marker_mat = construct_marker_mat_from_db(features=features, database=cell_marker)
-# #     # cd45 = [ct for ct in marker_mat.columns if marker_mat[ct]["CD45"] == 1]
-# #     # print(cd45)
-# #     # print(marker_mat)
-# #     to_yaml(marker_mat, "./marker_yaml/celltype_marker_2.yml")
-#     marker = pd.DataFrame()
-#     for db in cell_marker:
-#         # marker_db = pd.read_csv(db, sep="\t")
-#         # marker_db = marker_db[marker_db.species != "Mm"]
-#         marker_df = pd.read_csv(db)
-#         marker = pd.concat([marker, marker_df["Tissue"]])
-#     tissue = list(set(marker[0]))
-#     tissue.sort()
-#     print(tissue)
+##TODO: update available tissues
+##TODO: update documentations
+##TODO: 
