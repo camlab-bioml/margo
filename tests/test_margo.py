@@ -4,6 +4,7 @@ from unittest import TestCase
 import numpy as np
 import pandas as pd
 import yaml
+from margo import MarkerGenerator
 
 
 class TestMargo(TestCase):
@@ -17,18 +18,11 @@ class TestMargo(TestCase):
         self._database = [
             os.path.join(
                 os.path.dirname(__file__),
-                "../margo/marker_database/CellMarker-company.csv",
+                "../margo/marker_database/panglao_db.csv",
             ),
             os.path.join(
                 os.path.dirname(__file__),
-                "../margo/marker_database/CellMarker-experiment.csv",
-            ),
-            os.path.join(
-                os.path.dirname(__file__),
-                "../margo/marker_database/CellMarker-review.csv",
-            ),
-            os.path.join(
-                os.path.dirname(__file__), "../margo/marker_database/CellMarker-scs.csv"
+                "../margo/marker_database/cellmarker_db.csv",
             ),
         ]
         self._alias = os.path.join(
@@ -37,12 +31,10 @@ class TestMargo(TestCase):
         self._database_df = pd.DataFrame()
         for db in self._database:
             self._database_df = pd.concat([self._database_df, pd.read_csv(db)])
-        from margo import MarkerGenerator
 
         self._mg = MarkerGenerator(
             os.path.join(os.path.dirname(__file__), "test-data/exp_data.csv"),
-            self._database,
-            self._alias,
+            ["panglao", "cellmarker"],
         )
 
     def test_empty_feature(self):
@@ -64,7 +56,7 @@ class TestMargo(TestCase):
         marker_mat = self._mg.get_marker_mat()
         types = marker_mat.index
         for ct in types:
-            ct_db = self._database_df[self._database_df["Cell Type"] == ct]
+            ct_db = self._database_df[self._database_df["cell_type"] == ct]
             temp = sum([(ct_db["Tissue"] == t) for t in tissues])
             self.assertTrue((temp > 0).all())
 
@@ -80,3 +72,4 @@ class TestMargo(TestCase):
         with open(output_path, "r") as stream:
             actual = yaml.safe_load(stream)
         self.assertEqual(expected, actual)
+

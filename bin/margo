@@ -5,7 +5,8 @@ import time
 from margo import MarkerGenerator
 
 parser = argparse.ArgumentParser(description='Generate astir marker')
-parser.add_argument("expr_csv", help="Path to CSV expression matrix which is to be used for astir classification.")
+parser.add_argument("expr_data", help="Path to expression matrix which is to be used for astir classification. \
+                    Currently supported formats: csv file, anndata(h5ad) file and SingleCellExperiment or Seurat object in rds file")
 parser.add_argument("-y", "--marker_yaml", 
                     default='',
                     help="Path to output marker yaml file.")
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     if database == [] or "all" in database:
         database = None
 
-    mg = MarkerGenerator(expr_csv=args.expr_csv, database=database, update_db=args.update_database)
+    mg = MarkerGenerator(path=args.expr_data, database=database, update_db=args.update_database)
     mg.construct_marker_mat_from_db(
         tissue=tissue,
         min_marker=args.min_marker_per_celltype

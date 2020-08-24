@@ -5,6 +5,7 @@ import pandas as pd
 import yaml
 
 from margo.database import download_databases
+from margo.data_reader import data_reading
 from settings import ALIAS, LOCAL_DATABASES
 
 root_path = os.path.join(os.path.dirname(__file__), "..")
@@ -15,7 +16,7 @@ class MarkerGenerator:
     """
 
     def __init__(
-        self, expr_csv: str, database: List[str] = None, update_db: bool = False
+        self, path: str, database: List[str] = None, update_db: bool = False
     ) -> None:
         """ Initialize MarkerGenerator.
 
@@ -26,8 +27,7 @@ class MarkerGenerator:
         :param alias_marker: path to the input alias marker file, defaults to None
         :type alias_marker: str, optional
         """
-        expr_df = pd.read_csv(expr_csv, index_col=0)
-        self._features = expr_df.columns
+        self._features = data_reading(path)
         # self._alias_dict = None
         # if alias_marker is not None:
         with open(os.path.join(root_path, ALIAS), "r") as stream:

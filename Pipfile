@@ -4,21 +4,22 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-
-[packages]
 sphinx = "*"
 pytest = "*"
 rinohtype = "*"
 sphinx-rtd-theme = "*"
-pandas = "*"
-pyyaml = "*"
-argparse = "*"
-rootpath = "*"
 black = "*"
 pytest-cov = "*"
 mypy = "*"
 isort = "*"
+
+[packages]
+pandas = "*"
+pyyaml = "*"
+argparse = "*"
+rootpath = "*"
 requests = "*"
+anndata = "*"
 
 [requires]
 python_version = "3.8"
