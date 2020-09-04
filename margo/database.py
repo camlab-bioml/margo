@@ -7,14 +7,15 @@ from typing import Optional
 import pandas as pd
 import requests
 import yaml
+from fake_useragent import UserAgent
 
-from settings import ALIAS, DATABASES, LOCAL_DATABASES
+from settings import ALIAS, ALIAS_MANUAL, DATABASES, LOCAL_DATABASES
 
-parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, parent)
+# parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# sys.path.insert(0, parent)
 
 
-root_path = os.path.join(os.path.dirname(__file__), "..")
+# root_path = os.path.join(os.path.dirname(__file__), "..")
 
 
 def generate_single_alias(row: pd.DataFrame, alias_dict: dict) -> None:
@@ -35,12 +36,22 @@ def generate_alias_marker(marker: pd.DataFrame) -> None:
     alias_dict = {}
     marker.apply(generate_single_alias, axis=1, alias_dict=alias_dict)
     # print(alias_dict)
-    with open(os.path.join(root_path, ALIAS), "w") as yam:
-        yaml.dump(alias_dict, yam, width=80, default_flow_style=False)
+    with open(ALIAS_MANUAL, 'r') as stream:
+        alias_manual = yaml.safe_load(stream)
+        for key, val in alias_manual.items():
+            if key in alias_dict:
+                alias_dict[key].extend(val)
+            else:
+                alias_dict[key] = val
+    for key, val in alias_dict.items():
+        alias_dict[key] = list(set(alias_dict[key]+[key]))
+    with open(ALIAS, "w") as stream:
+        yaml.dump(alias_dict, stream, width=80, default_flow_style=False)
 
 
 def process_panglao() -> None:
-    path = os.path.join(root_path, LOCAL_DATABASES["panglao"])
+    path = LOCAL_DATABASES["panglao"]
+    # path = "margo/marker_database/PanglaoDB_markers_27_Mar_2020.tsv"
     marker = pd.read_csv(path, error_bad_lines=False, sep="\t")
     marker = marker[(marker["species"] == "Mm Hs") | (marker["species"] == "Hs")]
     new_marker = marker[["cell type", "official gene symbol", "organ", "nicknames"]]
@@ -59,7 +70,7 @@ def process_panglao() -> None:
 
 
 def process_cellmarker() -> None:
-    path = os.path.join(root_path, LOCAL_DATABASES["cellmarker"])
+    path = LOCAL_DATABASES["cellmarker"]
     marker = pd.read_csv(path, error_bad_lines=False, sep="\t")
     new_marker = marker[["cellName", "cellMarker", "tissueType"]]
     new_marker.columns = ["cell_type", "marker", "tissue"]
@@ -67,22 +78,21 @@ def process_cellmarker() -> None:
 
 
 def download_tsv_gz(name: str, url: str) -> None:
-    temp_name = os.path.join(root_path, "margo/marker_database/temp.tsv")
-    out_path = os.path.join(root_path, LOCAL_DATABASES[name])
-    r = requests.get(url, allow_redirects=True)
-    open(temp_name, "wb").write(r.content)
-    with gzip.open(temp_name, "rb") as f_in:
-        data = f_in.read()
-        with open(out_path, "wb") as f_out:
-            f_out.write(data)
-            read_tsv = csv.reader(f_in, delimiter="\t")
-            for row in read_tsv:
-                f_out.write(row)
-    os.remove(temp_name)
+    temp_one = "margo/marker_database/temp.tsv.gz"
+    out_path = LOCAL_DATABASES[name]
+    ua = UserAgent()
+    headers = {'User-Agent': str(ua.chrome)}
+    r = requests.get(url, headers=headers, timeout=30)
+    open(temp_one, "wb").write(r.content)
+    with gzip.open(temp_one, "rb") as f_one:
+        data = f_one.read()
+        with open(out_path, "wb") as f_two:
+            f_two.write(data)
+    os.remove(temp_one)
 
 
 def download_csv(name: str, url: str) -> None:
-    out_path = os.path.join(root_path, LOCAL_DATABASES[name])
+    out_path = LOCAL_DATABASES[name]
     r = requests.get(url, allow_redirects=True)
     open(out_path, "wb").write(r.content)
 
@@ -96,15 +106,15 @@ def download_databases(db_name: Optional[list] = None) -> None:
                 f"Margo currently doesn't support {db}, entre 'margo -h' for a list of supporting databases."
             )
         url = DATABASES[db]
-        if url[-7:] == ".tsv.gz":
-            download_tsv_gz(db, url)
-        elif url[-4:] == ".csv" or url[-4:] == ".txt":
-            download_csv(db, url)
 
         if db == "panglao":
-            process_panglao()
+            print("Database update failed. By terms and conditions of PabglaoDB, bot access is not permitted. If a later version is available, please contact Campbell Lab for manual update. Last updated version: PanglaoDB_markers_27_Mar_2020")
+            # download_tsv_gz(db, url)
+            # process_panglao()
         elif db == "cellmarker":
+            download_csv(db, url)
             process_cellmarker()
+            print("CellMarker Database successfullt updated.")
 
 
 # if __name__ == "__main__":

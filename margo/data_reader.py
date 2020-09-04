@@ -1,11 +1,14 @@
 import pandas as pd
 import os
 import subprocess
-import anndata
 from typing import Optional, List
+import warnings
 
+warnings.simplefilter(action="ignore", category=FutureWarning)
+# root = os.path.dirname(__file__)
 
-root = os.path.dirname(__file__)
+import anndata
+
 
 def data_reading(file_path: str, arg: Optional[str] = None) -> List[str]:
     if file_path[-4:] == ".csv":
@@ -33,8 +36,8 @@ def read_rds(file_path: str) -> List[str]:
     :return: extracted features
     :rtype: List[str]
     """
-    cache = 'rds_cache.csv'
-    cmd = ['Rscript', os.path.join(root, 'rds_reader.R'), file_path, os.path.join(root, cache)]
+    cache = 'margo/rds_cache.csv'
+    cmd = ['Rscript', 'margo/rds_reader.R', file_path, cache]
     subprocess.call(cmd, cwd=os.getcwd())
     features = list((pd.read_csv(cache, index_col=0)).values[0])
     # print(features)
@@ -59,5 +62,5 @@ def read_anndata(file_path: str, protein: Optional[str]=None) -> List[str]:
 
 
 # if __name__ == "__main__":
-    # print(read_rds("../tests/test-data/test_rds.rds"))
-    # print(read_anndata("../tests/test-data/test_ann.h5ad", "protein"))
+#     print(read_rds("../tests/test-data/test_rds.rds"))
+#     print(read_anndata("../tests/test-data/test_ann.h5ad", "protein"))

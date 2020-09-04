@@ -57,7 +57,7 @@ class TestMargo(TestCase):
         types = marker_mat.index
         for ct in types:
             ct_db = self._database_df[self._database_df["cell_type"] == ct]
-            temp = sum([(ct_db["Tissue"] == t) for t in tissues])
+            temp = sum([(ct_db["tissue"] == t) for t in tissues])
             self.assertTrue((temp > 0).all())
 
     def test_to_yaml(self):

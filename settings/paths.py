@@ -3,4 +3,5 @@ LOCAL_DATABASES = {
     "cellmarker": "margo/marker_database/cellmarker_db.csv",
 }
 MARGO = "margo/margo.py"
-ALIAS = "margo/marker_database/alias_copy.yml"
+ALIAS = "margo/marker_database/alias.yml"
+ALIAS_MANUAL = "margo/marker_database/alias_manual.yml"

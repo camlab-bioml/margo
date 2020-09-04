@@ -3,12 +3,13 @@ from typing import List, Optional
 
 import pandas as pd
 import yaml
+from difflib import SequenceMatcher
 
 from margo.database import download_databases
 from margo.data_reader import data_reading
 from settings import ALIAS, LOCAL_DATABASES
 
-root_path = os.path.join(os.path.dirname(__file__), "..")
+# root_path = os.path.join(os.path.dirname(__file__), "..")
 
 
 class MarkerGenerator:
@@ -28,12 +29,16 @@ class MarkerGenerator:
         :type alias_marker: str, optional
         """
         self._features = data_reading(path)
-        # self._alias_dict = None
+        self._alias_dict = None
         # if alias_marker is not None:
-        with open(os.path.join(root_path, ALIAS), "r") as stream:
+        with open(ALIAS, "r") as stream:
             self._alias_dict = yaml.safe_load(stream)
         self._database_df = self._construct_database(database, update_db)
         self._marker_mat = pd.DataFrame()
+        self._substitutions = {}
+
+    def _similar(self, a, b):
+        return SequenceMatcher(None, a, b).ratio()
 
     def _lookup_cellmarker(self, row: pd.DataFrame) -> pd.DataFrame:
         """ Helper for building marker matrix.
@@ -139,19 +144,14 @@ class MarkerGenerator:
                 raise Exception(
                     f"Margo currently doesn't support {db}, entre 'margo -h' for a list of supporting databases."
                 )
-            path = os.path.join(root_path, LOCAL_DATABASES[db])
+            path = LOCAL_DATABASES[db]
             marker_df = pd.read_csv(path)
-            # if tissue is not None:
-            #     temp_df = pd.DataFrame()
-            #     for t in tissue:
-            #         temp_df = pd.concat([temp_df, marker_df[marker_df.Tissue == t]])
-            #     marker_df = temp_df
 
             for r in range(marker_df.shape[0] - 1):
                 new_row = self._lookup_cellmarker(marker_df[r : r + 1])
                 marker = pd.concat([marker, new_row])
         if marker.shape == (0, 0):
-            raise NotGeneratableError("<tissue> does not exist in the tissue list.")
+            raise NotGeneratableError("No matching gene name is found in database. Check gene naming format.")
 
         marker.columns = ["feature", "cell_type", "tissue"]
         marker.index = list(range(marker.shape[0]))

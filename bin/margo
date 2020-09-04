@@ -4,6 +4,9 @@ import time
 
 from margo import MarkerGenerator
 
+wd = os.getcwd()
+os.chdir(os.path.join(os.path.dirname(__file__), ".."))
+
 parser = argparse.ArgumentParser(description='Generate astir marker')
 parser.add_argument("expr_data", help="Path to expression matrix which is to be used for astir classification. \
                     Currently supported formats: csv file, anndata(h5ad) file and SingleCellExperiment or Seurat object in rds file")
@@ -18,13 +21,12 @@ parser.add_argument("-d", "--database",
                         ---------------------------------------------------- Currently available databases: \
                         'panglao', 'cellmarker'")
 parser.add_argument("-u", "--update_database", 
-                    type=bool,
-                    default=False,
-                    help="Update databases specified by '-d' from the internet if set to True.")
+                    action='store_true',
+                    help="Update databases specified by '-d' from the internet if included.")
 parser.add_argument("-m", "--min_marker_per_celltype", 
                     type=int,
-                    default=1,
-                    help="Minimum marker per cell type needed to have to be included.")
+                    default=2,
+                    help="Minimum marker per cell type needed to have to be included, defaulted to 2.")
 parser.add_argument("-t", "--tissue",
                     nargs='+',
                     default=[],
@@ -68,9 +70,12 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
-    output = args.marker_yaml
+    output = os.path.join(wd, args.marker_yaml)
+    exp_in = os.path.join(wd, args.expr_data)
     if output == '':
-        output = f'{os.path.dirname(args.expr_csv)}/margo_marker_{time.strftime("%m.%d.%y-%H:%M", time.localtime())}.yml'
+        # if not os.path.exists(f'{os.path.dirname(exp_in)}/margo_output'):
+        #     os.mkdir(f'{os.path.dirname(exp_in)}/margo_output')
+        output = f'{wd}/{(exp_in.split("/")[-1]).split(".")[0]}_marker({time.strftime("%m.%d.%y-%H:%M", time.localtime())}).yml'
     tissue = args.tissue
     if tissue == [] or "all" in tissue:
         tissue = None
@@ -78,7 +83,7 @@ if __name__ == "__main__":
     if database == [] or "all" in database:
         database = None
 
-    mg = MarkerGenerator(path=args.expr_data, database=database, update_db=args.update_database)
+    mg = MarkerGenerator(path=exp_in, database=database, update_db=args.update_database)
     mg.construct_marker_mat_from_db(
         tissue=tissue,
         min_marker=args.min_marker_per_celltype
