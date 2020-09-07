@@ -29,16 +29,41 @@ class MarkerGenerator:
         :type alias_marker: str, optional
         """
         self._features = data_reading(path)
-        self._alias_dict = None
-        # if alias_marker is not None:
+        if update_db:
+            download_databases(database)
         with open(ALIAS, "r") as stream:
             self._alias_dict = yaml.safe_load(stream)
-        self._database_df = self._construct_database(database, update_db)
-        self._marker_mat = pd.DataFrame()
         self._substitutions = {}
+        self._process_feature_alias()
+        self._database_df = self._construct_database(database)
+        self._marker_mat = pd.DataFrame()
 
     def _similar(self, a, b):
         return SequenceMatcher(None, a, b).ratio()
+
+    def _process_feature_alias(self, threshold:float = 0.6) -> None:
+        markers = list(self._alias_dict.keys())
+        for i in range(len(self._features)):
+            f = self._features[i]
+            if f not in self._alias_dict:
+                replace = None
+                max_similarity = threshold
+                for m in markers:
+                    similarity = self._similar(f, m)
+                    if similarity > max_similarity:
+                        replace = m
+                        max_similarity = similarity
+                if replace is None:
+                    self._substitutions[f] = "ignored"
+                    self._features[i] = None
+                else:
+                    self._substitutions[f] = replace
+                    self._features[i] = self._alias_dict[replace]
+        print(self._substitutions)
+        print(self._features)
+        while None in self._features:
+            self._features.remove(None)
+
 
     def _lookup_cellmarker(self, row: pd.DataFrame) -> pd.DataFrame:
         """ Helper for building marker matrix.
@@ -50,45 +75,63 @@ class MarkerGenerator:
         """
         mks = row["marker"].values[0]
         mks = mks.split(",")
-        mks = [m.strip() for m in mks]
 
         mk_df = pd.DataFrame()
-        for f in self._features:
-            if (self._alias_dict is None) or (f not in self._alias_dict):
-                if f in mks:
-                    mk_df = pd.concat(
-                        [
-                            mk_df,
-                            pd.DataFrame(
-                                [
-                                    [
-                                        f,
-                                        row["cell_type"].values[0],
-                                        row["tissue"].values[0],
-                                    ]
-                                ]
-                            ),
-                        ]
-                    )
-            else:
-                alias = self._alias_dict[f]
-                for m in mks:
-                    if m in alias:
-                        mk_df = pd.concat(
+        for m in mks:
+            if m in self._features:
+                mk_df = pd.concat(
+                    [
+                        mk_df,
+                        pd.DataFrame(
                             [
-                                mk_df,
-                                pd.DataFrame(
-                                    [
-                                        [
-                                            f,
-                                            row["cell_type"].values[0],
-                                            row["tissue"].values[0],
-                                        ]
-                                    ]
-                                ),
+                                [
+                                    m,
+                                    row["cell_type"].values[0],
+                                    row["tissue"].values[0],
+                                ]
                             ]
-                        )
+                        ),
+                    ]
+                )
+
         return mk_df
+
+        
+        # for f in self._features:
+        #   if f not in self._alias_dict:
+        #         if f in mks:
+        #             mk_df = pd.concat(
+        #                 [
+        #                     mk_df,
+        #                     pd.DataFrame(
+        #                         [
+        #                             [
+        #                                 f,
+        #                                 row["cell_type"].values[0],
+        #                                 row["tissue"].values[0],
+        #                             ]
+        #                         ]
+        #                     ),
+        #                 ]
+        #             )
+        #   else:
+        #         for m in mks:
+        #             if m in alias:
+        #                 mk_df = pd.concat(
+        #                     [
+        #                         mk_df,
+        #                         pd.DataFrame(
+        #                             [
+        #                                 [
+        #                                     f,
+        #                                     row["cell_type"].values[0],
+        #                                     row["tissue"].values[0],
+        #                                 ]
+        #                             ]
+        #                         ),
+        #                     ]
+        #                 )
+        # return mk_df
 
     def _collapse_celltype(self) -> None:
         """ A helper to collapse cell types with the same features into one single type.
@@ -125,7 +168,7 @@ class MarkerGenerator:
                 self._marker_mat = self._marker_mat.drop(ct, axis=1)
 
     def _construct_database(
-        self, database: Optional[List[str]], update_db: bool
+        self, database: Optional[List[str]]
     ) -> pd.DataFrame:
         """ Helper for constructing database df.
 
@@ -136,8 +179,6 @@ class MarkerGenerator:
         """
         if database is None:
             database = list(LOCAL_DATABASES.keys())
-        if update_db:
-            download_databases(database)
         marker = pd.DataFrame()
         for db in database:
             if db not in LOCAL_DATABASES:
@@ -211,15 +252,28 @@ class MarkerGenerator:
         """
         return self._marker_mat
 
-    def to_yaml(self, name: str) -> None:
+    def to_yaml(self, name: str, include_substitutions: bool=True) -> None:
         """ Convert the marker dictionary into a yaml file.
 
         :param name: name of the output file
         :type name: str
         """
+        if name[-4:] != ".yml" and name[-5:] != ".yaml":
+            raise(NotGeneratableError("Output file name must end by '.yml' or '.yaml'."))
         marker = self.get_marker_dict()
-        with open(name, "w") as yam:
-            yaml.dump(marker, yam, width=80, default_flow_style=False)
+        with open(name, "w") as stream:
+            yaml.dump(marker, stream, width=80, default_flow_style=False)
+            print(f"Corresponding marker file generated as {name}.")
+        if include_substitutions:
+            if len(self._substitutions) > 0:
+                substitutions_name = ''
+                if name[-4:] == '.yml':
+                    substitutions_name = name[:-4] + "_substitutions.yml"
+                elif name[-5:] == '.yaml':
+                    substitutions_name = name[:-5] + "_substitutions.yaml"
+                with open(substitutions_name, "w") as stream:
+                    yaml.dump(self._substitutions, stream, width=80, default_flow_style=False)
+                    print(f"Some marker names cannot be found in the database and are ignored or substituted by a most similar one in the database. A list of substitutions could be checked at {substitutions_name}.")
 
 
 class NotGeneratableError(Exception):

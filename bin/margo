@@ -23,6 +23,9 @@ parser.add_argument("-d", "--database",
 parser.add_argument("-u", "--update_database", 
                     action='store_true',
                     help="Update databases specified by '-d' from the internet if included.")
+parser.add_argument("-i", "--ignore_substitution", 
+                    action='store_false',
+                    help="Ignore substitution file if flag is set.")
 parser.add_argument("-m", "--min_marker_per_celltype", 
                     type=int,
                     default=2,
@@ -88,8 +91,7 @@ if __name__ == "__main__":
         tissue=tissue,
         min_marker=args.min_marker_per_celltype
     )
-    mg.to_yaml(output)
+    mg.to_yaml(output, args.ignore_substitution)
 
-    print(f"Corresponding marker file generated as {output}.")
 
 # margo ../BaselTMA_SP43_115_X4Y8.csv ../test_marker.yml -d panglao -t Brain "Immune system" -m 3
