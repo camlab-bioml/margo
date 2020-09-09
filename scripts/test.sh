@@ -3,6 +3,6 @@
 set -e
 set -x
 
-# pytest --cov=marov=tests --cov-report=term-missing ${@}
-# # pytest .
-# bash ./scripts/lint.shgo --c
+pytest --cov=marov=tests --cov-report=term-missing ${@}
+# pytest .
+bash ./scripts/lint.shgo --c

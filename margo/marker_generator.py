@@ -59,8 +59,8 @@ class MarkerGenerator:
                 else:
                     self._substitutions[f] = replace
                     self._features[i] = self._alias_dict[replace]
-        print(self._substitutions)
-        print(self._features)
+        # print(self._substitutions)
+        # print(self._features)
         while None in self._features:
             self._features.remove(None)
 
